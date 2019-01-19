@@ -1,40 +1,40 @@
+library dart_k8s_client;
+
+import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
+import 'package:http/http.dart';
 
-bool callFunction(X509Certificate cert, String host, int port) {
-  print(cert);
-  return true;
-}
+part 'resource/resource.dart';
+part 'resource/namespace.dart';
+part 'resource/namespace_list.dart';
 
-void main() {
-  var url = "https://192.168.39.219:8443/version";
-  SecurityContext context = SecurityContext();
- // context.setTrustedCertificates("/home/dbocharo/.minikube/ca.crt");
-  context.useCertificateChain("/home/dbocharo/.minikube/ca.crt");
-  context.usePrivateKey("/home/dbocharo/.minikube/ca.key");
-  //context.setClientAuthorities("/home/dbocharo/.minikube/ca.crt");
-  HttpClient client = new HttpClient(context: context);
-//  client.badCertificateCallback =
-//      (X509Certificate cert, String host, int port) => callFunction(cert, host, port);
-//  client.get("192.168.39.219", 8443, "version")
-//      .then((HttpClientRequest request) => request.close())
-//      .then((HttpClientResponse response) {
-//    response.transform(utf8.decoder).listen((contents) {
-//      print(contents);
-//    });
-//  });
-  client.getUrl(Uri.parse(url))
-      .then((HttpClientRequest request) => request.close())
-      .then((HttpClientResponse response) {
-    response.transform(utf8.decoder).listen((contents) {
-      print(contents);
-    });
-  });
+class DartKubernetesClient {
+  String url;
+  http.Client clientHttp;
 
-//  var httpClient = new IOClient(client);
-//  httpClient.get(url).then((response) => print(response.body))
-//      .whenComplete(client.close);
+  DartKubernetesClient(this.url) {
+    _parseUrl(url);
+    clientHttp = new http.Client();
+  }
 
+  Future<String> getVersion() async {
+    Response response = await clientHttp.get(url + "/version");
+    clientHttp.close();
+    return response.body;
+  }
+
+  Future<NamespaceList> getNamespaceList() async {
+    Response response = await clientHttp.get(url + "/api/v1/namespaces");
+    return new NamespaceList(jsonDecode(response.body));
+  }
+
+  void _parseUrl(String url) {
+    Uri uri = Uri.parse(url);
+    String scheme = uri.hasScheme ? uri.scheme : "http";
+    String port = uri.hasPort ? uri.port.toString() : "8443";
+    this.url = scheme + "://" + uri.host + ":" + port;
+  }
 }
