@@ -3,14 +3,19 @@ import "package:test/test.dart";
 
 
 void main() {
+
+  // kubectl describe secret default -n kube-system
+  String token = "";
+  //String url = "https://192.168.39.178:8443";
+  String url = "http://127.0.0.1:8001";
+  final DartKubernetesClient client = new DartKubernetesClient(url/*, token:token, ignoreCertificateCheck: true*/);
+
   test("Default client test", () async {
-    DartKubernetesClient client = new DartKubernetesClient("http://127.0.0.1:8001");
     var result = await client.getVersion();
     print(result);
   });
 
   test("NamespacesList test", () async {
-    DartKubernetesClient client = new DartKubernetesClient("http://127.0.0.1:8001");
     var result = await client.getNamespaceList();
     print(result.items.first.name);
   });

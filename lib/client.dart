@@ -3,26 +3,27 @@ library dart_k8s_client;
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:dart_kubernetes_client/src/patched_client.dart';
 import 'package:http/http.dart';
 
 part 'resource/resource.dart';
 part 'resource/namespace.dart';
 part 'resource/namespace_list.dart';
+part 'package:dart_kubernetes_client/exceptions.dart';
 
 class DartKubernetesClient {
   String url;
-  http.Client clientHttp;
+  Client clientHttp;
 
-  DartKubernetesClient(this.url) {
+  DartKubernetesClient(this.url, {String token, bool ignoreCertificateCheck = false}) {
     _parseUrl(url);
-    clientHttp = new http.Client();
+    this.clientHttp = new PatchedIOClient(token:token, ignoreCertificateCheck:ignoreCertificateCheck);
   }
 
   Future<String> getVersion() async {
     Response response = await clientHttp.get(url + "/version");
-    clientHttp.close();
     return response.body;
   }
 
@@ -36,5 +37,9 @@ class DartKubernetesClient {
     String scheme = uri.hasScheme ? uri.scheme : "http";
     String port = uri.hasPort ? uri.port.toString() : "8443";
     this.url = scheme + "://" + uri.host + ":" + port;
+  }
+
+  void close() {
+    clientHttp.close();
   }
 }
