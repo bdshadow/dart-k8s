@@ -17,9 +17,20 @@ class DartKubernetesClient {
   String url;
   Client clientHttp;
 
-  DartKubernetesClient(this.url, {String token, bool ignoreCertificateCheck = false}) {
+  DartKubernetesClient.oAuthClient(this.url, String token,
+      {bool ignoreCertificateCheck = false}) {
     _parseUrl(url);
-    this.clientHttp = new PatchedIOClient(token:token, ignoreCertificateCheck:ignoreCertificateCheck);
+    this.clientHttp = new PatchedIOClient(
+        token: token, ignoreCertificateCheck: ignoreCertificateCheck);
+  }
+
+  DartKubernetesClient.basicClient(this.url, String username, String password,
+      {bool ignoreCertificateCheck = false}) {
+    _parseUrl(url);
+    this.clientHttp = new PatchedIOClient(
+        username: username,
+        password: password,
+        ignoreCertificateCheck: ignoreCertificateCheck);
   }
 
   Future<String> getVersion() async {

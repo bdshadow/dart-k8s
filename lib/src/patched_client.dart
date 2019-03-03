@@ -14,9 +14,14 @@ class PatchedIOClient extends IOClient {
   PatchedIOClient._(HttpClient httpClient) : super(httpClient);
 
   // https://stackoverflow.com/questions/50684784/how-to-super-call-with-complex-arguments-in-dart
-  factory PatchedIOClient({String token, String username, String password, bool ignoreCertificateCheck = false}) {
+  factory PatchedIOClient(
+      {String token,
+      String username,
+      String password,
+      bool ignoreCertificateCheck = false}) {
     if (token != null && username != null) {
-      throw Exception("You must provide only one of token or username, not both");
+      throw Exception(
+          "You must provide only one of token or username, not both");
     }
     HttpClient httpClient = new HttpClient();
     if (ignoreCertificateCheck) {
@@ -41,11 +46,13 @@ class PatchedIOClient extends IOClient {
       response = await super
           .get(url, headers: {"Authorization": getOAuthCredential(token)});
     } else if (username != null) {
-      response = await super
-          .get(url, headers: {"Authorization": getBasicAuthCredential(username, password)});
+      response = await super.get(url, headers: {
+        "Authorization": getBasicAuthCredential(username, password)
+      });
     } else {
       response = await super.get(url);
     }
+
     if (response.statusCode == 403) {
       throw AccessDeniedException(_parseMessage(response.body));
     }

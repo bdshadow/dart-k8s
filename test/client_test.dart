@@ -8,7 +8,7 @@ void main() {
   String token = "";
   //String url = "https://192.168.39.178:8443";
   String url = "http://127.0.0.1:8001";
-  final DartKubernetesClient client = new DartKubernetesClient(url/*, token:token, ignoreCertificateCheck: true*/);
+  final DartKubernetesClient client = new DartKubernetesClient.oAuthClient(url, token);
 
   test("Default client test", () async {
     var result = await client.getVersion();

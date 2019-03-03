@@ -6,7 +6,11 @@ class AccessDeniedException extends IOException {
   AccessDeniedException(this.message);
 
   String toString() {
-    var b = new StringBuffer()..write('AccessDeniedException: ')..write(message);
+    var b = new StringBuffer()
+      ..write('AccessDeniedException: ')
+      ..write(message);
     return b.toString();
   }
 }
+
+class HandshakeKubernetesException extends HandshakeException {}
