@@ -7,10 +7,12 @@ import 'dart:io';
 
 import 'package:dart_kubernetes_client/src/patched_client.dart';
 import 'package:http/http.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'resource/resource.dart';
 part 'resource/namespace.dart';
 part 'resource/namespace_list.dart';
+part 'resource/version.dart';
 part 'package:dart_kubernetes_client/exceptions.dart';
 
 class DartKubernetesClient {
@@ -33,9 +35,9 @@ class DartKubernetesClient {
         ignoreCertificateCheck: ignoreCertificateCheck);
   }
 
-  Future<String> getVersion() async {
+  Future<Version> getVersion() async {
     Response response = await clientHttp.get(url + "/version");
-    return response.body;
+    return Version.fromJson(jsonDecode(response.body));
   }
 
   Future<NamespaceList> getNamespaceList() async {

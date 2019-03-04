@@ -12,7 +12,8 @@ void main() {
 
   test("Default client test", () async {
     var result = await client.getVersion();
-    print(result);
+    print(result.gitCommit);
+    print(result.buildDate);
   });
 
   test("NamespacesList test", () async {
