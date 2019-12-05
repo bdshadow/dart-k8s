@@ -23,7 +23,21 @@ class PatchedIOClient extends IOClient {
       throw Exception(
           "You must provide only one of token or username, not both");
     }
-    HttpClient httpClient = new HttpClient();
+
+//    The following works from curl
+//    curl --cacert ~/.minikube/ca.crt --cert ~/.minikube/client.crt --key ~/.minikube/client.key https://192.168.39.144:8443/version
+//    , but
+//    SecurityContext context = SecurityContext();
+//    context.setTrustedCertificates("/home/bocharov/.minikube/ca.crt");
+//    context.useCertificateChain("/home/bocharov/.minikube/client.crt");
+//    context.usePrivateKey("/home/bocharov/.minikube/client.key");
+//    doesn't work from dart, although according to
+//    https://github.com/dart-lang/sdk/issues/35462#issuecomment-448940674
+//    is it done accordingly
+
+    HttpClient httpClient = new HttpClient(/*context: context*/);
+
+
     if (ignoreCertificateCheck) {
       httpClient.badCertificateCallback =
           (X509Certificate certificate, host, port) {

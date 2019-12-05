@@ -42,7 +42,7 @@ class DartKubernetesClient {
 
   Future<NamespaceList> getNamespaceList() async {
     Response response = await clientHttp.get(url + "/api/v1/namespaces");
-    return new NamespaceList(jsonDecode(response.body));
+    return NamespaceList.fromJson(jsonDecode(response.body));
   }
 
   void _parseUrl(String url) {

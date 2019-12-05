@@ -24,16 +24,15 @@ class Version {
       this.platform});
 
   factory Version.fromJson(Map<String, dynamic> json) {
-    return Version(
-        major: int.parse(json["major"]),
-        minor: int.parse(json["minor"]),
-        gitVersion: json["gitVersion"],
-        gitCommit: json["gitCommit"],
-        gitTreeState: json["gitTreeState"],
-        buildDate: DateTime.parse(json["buildDate"]),
-        goVersion: json["goVersion"],
-        compiler: json["compiler"],
-        platform: json["platform"]);
+    return Version(major: int.parse(json["major"]),
+      minor: int.parse(json["minor"]),
+      gitVersion: json["gitVersion"],
+      gitCommit: json["gitCommit"],
+      gitTreeState: json["gitTreeState"],
+      buildDate: DateTime.parse(json["buildDate"]),
+      goVersion: json["goVersion"],
+      compiler: json["compiler"],
+      platform: json["platform"]);
   }
 
   Map<String, dynamic> toJson() {

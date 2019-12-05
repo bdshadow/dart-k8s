@@ -1,16 +1,19 @@
 part of dart_k8s_client;
 
+@JsonSerializable()
 class Namespace {
   static const ResourceKind kind = ResourceKind.Namespace;
   String name;
   DateTime creationTimestamp;
-  Status statusPhase;
+  String statusPhase;
 
-  Namespace(Map namespaceJsonMap) {
-    this.name = namespaceJsonMap["metadata"]["name"];
-    this.creationTimestamp =
-        DateTime.parse(namespaceJsonMap["metadata"]["creationTimestamp"]);
-    this.statusPhase = Status.values.firstWhere(
-        (s) => s.toString() == "Status." + namespaceJsonMap["status"]["phase"]);
+  Namespace(this.name, this.creationTimestamp, this.statusPhase);
+
+  factory Namespace.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> namespaceMeta = json["metadata"];
+    return Namespace(
+        namespaceMeta["name"],
+        DateTime.parse(namespaceMeta["creationTimestamp"]),
+        json["status"]["phase"]);
   }
 }

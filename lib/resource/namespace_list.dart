@@ -4,9 +4,9 @@ class NamespaceList {
   static const ResourceKind kind = ResourceKind.NamespaceList;
   Set<Namespace> items = HashSet<Namespace>();
 
-  NamespaceList(Map namespaceJsonMap) {
-    for (var nsItem in namespaceJsonMap["items"]) {
-      this.items.add(new Namespace(nsItem));
-    }
+  NamespaceList(this.items);
+
+  factory NamespaceList.fromJson(Map<String, dynamic> json) {
+    return NamespaceList(Set<Namespace>.from(json["items"].map((i) => Namespace.fromJson(i))));
   }
 }
